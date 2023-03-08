@@ -1,0 +1,11 @@
+{
+  "include": [
+    "*/*.ts",
+    "*.ts",
+    ".eslintrc"
+  ],
+  "compilerOptions": {
+    "outDir": "build",
+    "declaration": true,
+  }
+}
