@@ -34,18 +34,18 @@ Official docs - https://platform.openai.com/docs/api-reference/chat
 ### Import
 #### CommonJS
 
-`const ChatGPT = require('chatgpt-wrapper')`
+`const { ChatGPT } = require('chatgpt-wrapper')`
 
 Types
 
 `const { Message, ReqBody, ResBody } = require('chatgpt-wrapper')`
 
 #### Modules
-`import ChatGPT from 'chatgpt-wrapper'`
+`import { ChatGPT } from 'chatgpt-wrapper'`
 
 with Types
 
-`import ChatGPT, { Message, ReqBody, ResBody } from 'chatgpt-wrapper'`
+`import { ChatGPT, Message, ReqBody, ResBody } from 'chatgpt-wrapper'`
 
 ### New instance
 
@@ -110,6 +110,7 @@ Raw string equals to
 ```
 {
   model: 'gpt-3.5-turbo',
+  stream: true,
   messages: [{
     role: 'user',
     content: 'YOUR STRING',
@@ -119,9 +120,11 @@ Raw string equals to
 
 Examples:
 ```
-const answer = await chat.send('what is JavaScript in 200 words');
+(async () => {
+  const answer = await chat.stream('what is JavaScript in 200 words');
 
-answer.pipe(process.stdout);
+  answer.pipe(process.stdout);
+})();
 ```
 
 ## Types

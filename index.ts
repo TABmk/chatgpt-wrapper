@@ -173,7 +173,7 @@ export type ResBody = {
   }>
 };
 
-export default class ChatGPT {
+export class ChatGPT {
   API_KEY: string;
 
   ORG: string | undefined;
@@ -207,7 +207,7 @@ export default class ChatGPT {
     this.URL = 'https://api.openai.com/v1/chat/completions';
   }
 
-  private async req(content: ReqBody | string) {
+  private async req(content: ReqBody | string, isStream: boolean = false) {
     const headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.API_KEY}`,
@@ -219,6 +219,7 @@ export default class ChatGPT {
 
     const finBody = typeof content === 'string' ? {
       model: 'gpt-3.5-turbo',
+      stream: isStream,
       messages: [{ role: 'user', content }],
     } : content;
 
@@ -278,6 +279,7 @@ export default class ChatGPT {
    * ```
    * {
    *   model: 'gpt-3.5-turbo',
+   *   stream: true,
    *   messages: [{ role: 'user', content: 'STRING' }],
    * }
    * ```
@@ -286,6 +288,6 @@ export default class ChatGPT {
    * @returns {Promise<NodeJS.ReadableStream>} Promise with a {@link NodeJS.ReadableStream}
    */
   stream(content: ReqBody | string): Promise<NodeJS.ReadableStream> {
-    return this.req(content);
+    return this.req(content, true);
   }
 }
