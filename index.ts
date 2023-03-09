@@ -233,7 +233,7 @@ export class ChatGPT {
       throw new Error(`Request error: ${req.statusText}`);
     }
 
-    if (typeof content === 'object' && content.stream) {
+    if (typeof finBody === 'object' && finBody.stream) {
       return req.body;
     }
 
