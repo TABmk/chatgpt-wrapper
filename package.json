@@ -4,7 +4,7 @@
   "repository": "https://github.com/TABmk/chatgpt-wrapper.git",
   "homepage": "https://github.com/TABmk/chatgpt-wrapper.git",
   "bugs": "https://github.com/TABmk/chatgpt-wrapper/issues",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "TAB_mk <tabmk.contact@gmail.com>",
   "license": "MIT",
   "keywords": [
@@ -21,9 +21,10 @@
     "start": "yarn build && node ./build/index.js",
     "dev": "nodemon",
     "lint": "eslint",
-    "docs": "typedoc --tsconfig tsconfig.eslint.json && open file://$(pwd)/docs/index.html"
+    "minify": "minify ./index.js > ./index.min && mv ./index.min ./index.js",
+    "npm-size": "yarn pack -s && echo \"📈 Size: $(wc -c < $(ls ./*.tgz))b\" && rm -rf ./*.tgz"
   },
-  "main": "index.ts",
+  "main": "index.js",
   "types": "index.d.ts",
   "devDependencies": {
     "@types/node": "18.11.18",
@@ -34,8 +35,8 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",
     "eslint-plugin-import": "2.25.2",
+    "minify": "^9.2.0",
     "nodemon": "2.0.20",
-    "typedoc": "0.23.23",
     "typescript": "4.9.4"
   },
   "dependencies": {
