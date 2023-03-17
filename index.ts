@@ -230,7 +230,7 @@ export class ChatGPT {
     });
 
     if (!req.ok) {
-      throw new Error(`Request error: ${req.statusText}`);
+      throw new Error(`Request error: ${(await req.json())?.error?.message || req.statusText}`);
     }
 
     if (typeof finBody === 'object' && finBody.stream) {
