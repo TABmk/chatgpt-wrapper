@@ -22,9 +22,9 @@ export type ReqBody = {
   /**
    * _Required_
    *
-   * ID of the model to use. Currently, only gpt-3.5-turbo and gpt-3.5-turbo-0301 are supported.
+   * ID of the model to use. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
    */
-  model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301',
+  model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314',
   /**
    * _Required_
    *
@@ -122,8 +122,10 @@ export type ResBody = {
   object: string,
   /** Unix timestamp */
   created: number,
-  /** Currently, only gpt-3.5-turbo and gpt-3.5-turbo-0301 are supported. */
-  model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301',
+  /**
+   * ID of the used model. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
+   */
+  model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314',
   /** tokens usage, see also {@link https://platform.openai.com/docs/guides/chat/managing-tokens "Managing tokens"} */
   usage: {
     /**
@@ -171,6 +173,35 @@ export type ResBody = {
      */
     message: Message
   }>
+};
+
+/**
+ * An `APIError` indicates that something went wrong on our side when processing your request.
+ * This could be due to a temporary error, a bug, or a system outage.
+ * We apologize for any inconvenience and we are working hard to resolve any issues as soon
+ * as possible.You can check our system status page for more information.
+ *
+ * If you encounter an APIError, please try the following steps:
+ *
+ * - Wait a few seconds and retry your request. Sometimes, the issue may be resolved quickly
+ * and your request may succeed on the second attempt.
+ * - Check our status page for any ongoing incidents or maintenance that may affect our services.
+ * If there is an active incident, please follow the updates and wait until it is resolved
+ * before retrying your request.
+ * - If the issue persists, check out our Persistent errors next steps section.
+ *
+ * See https://platform.openai.com/docs/guides/error-codes/api-errors
+ */
+export type APIError = {
+  error: {
+    /** Error body */
+    message?: string,
+    /** See https://platform.openai.com/docs/guides/error-codes/python-library-error-types */
+    type?: string,
+    param?: any,
+    /** See https://platform.openai.com/docs/guides/error-codes/error-codes */
+    code: any,
+  }
 };
 
 export class ChatGPT {
@@ -230,7 +261,9 @@ export class ChatGPT {
     });
 
     if (!req.ok) {
-      throw new Error(`Request error: ${(await req.json())?.error?.message || req.statusText}`);
+      const text = await req.json();
+
+      throw new Error(`${text?.error?.message ? 'API' : 'Request'} error: ${text?.error?.message || req.statusText}`);
     }
 
     if (typeof finBody === 'object' && finBody.stream) {

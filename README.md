@@ -24,7 +24,7 @@ Official docs - https://platform.openai.com/docs/api-reference/chat
 - [Stream](https://platform.openai.com/docs/api-reference/chat/create#chat/create-stream) included
 
 ## Install
-`npm i chatgpt-wrapper`
+`npm i chatgpt-wrapper` 
 
   or
 
@@ -34,24 +34,20 @@ Official docs - https://platform.openai.com/docs/api-reference/chat
 ### Import
 #### CommonJS
 
-`const { ChatGPT } = require('chatgpt-wrapper')`
-
-Types
-
-`const { Message, ReqBody, ResBody } = require('chatgpt-wrapper')`
+`const { ChatGPT } = require('chatgpt-wrapper');`
 
 #### Modules
-`import { ChatGPT } from 'chatgpt-wrapper'`
+`import { ChatGPT } from 'chatgpt-wrapper';`
 
 with Types
 
-`import { ChatGPT, Message, ReqBody, ResBody } from 'chatgpt-wrapper'`
+`import { ChatGPT, Message, ReqBody, ResBody } from 'chatgpt-wrapper';`
 
 ### New instance
 
 Visit your [API Keys](https://platform.openai.com/account/api-keys) page to retrieve the API key
 
-```
+``` javascript
 const chat = new ChatGPT({
   API_KEY: '...', // Your API KEY (Required)
   ORG: '...',     // Your organization (Optional)
@@ -59,14 +55,37 @@ const chat = new ChatGPT({
 });
 ```
 
+### Error Handling
+
+Do not forget to catch errors from your requests since OpenAI API sometimes returns error message instead of response.
+
+"[API error](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L266)" errors returns [APIError](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L195) type.
+
+#### async/await
+``` javascript
+try {
+  const answer = chat.send('question');
+  // ...
+} catch (err) {
+  // handle error
+}
+```
+
+#### Promise
+``` javascript
+chat.send('question')
+  .then((answer) => { /* ... */ })
+  .catch((err) => { /* handle error */ });
+```
+
 ## Methods
 
-### send(content: ReqBody | string): Promise<ResBody>
+## send(content: ReqBody | string): Promise\<ResBody>
 
 Use this method to send request to ChatGPT API
 
 Raw string equals to
-```
+``` javascript
 {
   model: 'gpt-3.5-turbo',
   messages: [{
@@ -79,17 +98,17 @@ Raw string equals to
 ⚠️ To use stream option, use .stream() method! ⚠️
 
 Examples:
-```
+``` javascript
 const answer = await chat.send('what is JavaScript');
 
 console.log(answer.choices[0].message);
 ```
-```
+``` javascript
 chat.send('what is JavaScript').then((answer) => {
   console.log(answer.choices[0].message);
 });
 ```
-```
+``` javascript
 const answer = await chat.send({
   model: 'gpt-3.5-turbo-0301',
   messages: [{
@@ -107,7 +126,7 @@ console.log(answer.choices[0].message);
 Use this method to send request to ChatGPT API and get steam response back
 
 Raw string equals to
-```
+``` javascript
 {
   model: 'gpt-3.5-turbo',
   stream: true,
@@ -119,7 +138,7 @@ Raw string equals to
 ```
 
 Examples:
-```
+``` javascript
 (async () => {
   const answer = await chat.stream('what is JavaScript in 200 words');
 
@@ -146,4 +165,10 @@ Source: [index.ts#L21](https://github.com/TABmk/chatgpt-wrapper/blob/master/inde
 Response body
 
 Source: [index.ts#L120](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L120)
+
+### APIError
+
+OpenAI API error
+
+Source: [index.ts#L195](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L195)
 
