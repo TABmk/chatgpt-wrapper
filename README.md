@@ -64,7 +64,7 @@ Do not forget to catch errors from your requests since OpenAI API sometimes retu
 #### async/await
 ``` javascript
 try {
-  const answer = chat.send('question');
+  const answer = await chat.send('question');
   // ...
 } catch (err) {
   // handle error
