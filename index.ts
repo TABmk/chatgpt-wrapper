@@ -125,7 +125,7 @@ export type ResBody = {
   /**
    * ID of the used model. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
    */
-  model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314',
+  model: ReqBody['model'],
   /** tokens usage, see also {@link https://platform.openai.com/docs/guides/chat/managing-tokens "Managing tokens"} */
   usage: {
     /**
@@ -236,7 +236,9 @@ export class ChatGPT {
      */
     URL?: string,
     /**
-     * ID of the model to use. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
+     * ID of the model to use in all requests, where it is not specified. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
+     *
+     * _Defaults to 'gpt-3.5-turbo'_
      */
     MODEL?: ReqBody['model'],
   }) {

@@ -45,13 +45,21 @@ with Types
 
 ### New instance
 
-Visit your [API Keys](https://platform.openai.com/account/api-keys) page to retrieve the API key
+
+- **API_KEY** *(Required)*: Visit your [API Keys](https://platform.openai.com/account/api-keys) page to retrieve the API key
+
+- **ORG** *(Optional)*: For users who belong to multiple organizations, you can specify which organization is used for an API request. Usage from these API requests will count against the specified organization's subscription quota. [Get Org ID here](https://platform.openai.com/account/org-settings).
+
+- **URL** *(Optional)*: API endpoint. Default set to ['Create chat completion' method](https://platform.openai.com/docs/api-reference/chat/create).
+
+- **MODEL** *(Optional)*: Model for requests, where not specified. Default is 'gpt-3.5-turbo'. [Models list](https://platform.openai.com/docs/models/model-endpoint-compatibility).
 
 ``` javascript
 const chat = new ChatGPT({
   API_KEY: '...', // Your API KEY (Required)
   ORG: '...',     // Your organization (Optional)
   URL: '...',     // API endpoint (Optional)
+  MODEL: '...',   // Custom default model (Optional)
 });
 ```
 
