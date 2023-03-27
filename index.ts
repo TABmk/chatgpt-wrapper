@@ -211,9 +211,12 @@ export class ChatGPT {
 
   URL: string;
 
+  MODEL: ReqBody['model'];
+
   constructor({
     API_KEY,
     ORG,
+    MODEL,
   }: {
     /**
      * The OpenAI API uses API keys for authentication.
@@ -232,10 +235,15 @@ export class ChatGPT {
      * API endpoint. Default: `https://api.openai.com/v1/chat/completions`
      */
     URL?: string,
+    /**
+     * ID of the model to use. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
+     */
+    MODEL?: ReqBody['model'],
   }) {
     this.API_KEY = API_KEY;
     this.ORG = ORG;
     this.URL = 'https://api.openai.com/v1/chat/completions';
+    this.MODEL = MODEL || 'gpt-3.5-turbo';
   }
 
   private async req(content: ReqBody | string, isStream: boolean = false) {
@@ -249,7 +257,7 @@ export class ChatGPT {
     }
 
     const finBody = typeof content === 'string' ? {
-      model: 'gpt-3.5-turbo',
+      model: this.MODEL,
       stream: isStream,
       messages: [{ role: 'user', content }],
     } : content;
