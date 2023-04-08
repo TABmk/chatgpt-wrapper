@@ -204,6 +204,13 @@ export type APIError = {
   }
 };
 
+/**
+ * Options to pass to fetch request.
+ */
+export type FetchOptions = {
+  signal?: AbortSignal
+};
+
 export class ChatGPT {
   API_KEY: string;
 
@@ -248,7 +255,11 @@ export class ChatGPT {
     this.MODEL = MODEL || 'gpt-3.5-turbo';
   }
 
-  private async req(content: ReqBody | string, isStream: boolean = false) {
+  private async req(
+    content: ReqBody | string,
+    isStream: boolean = false,
+    fetchOptions : FetchOptions = {},
+  ) {
     const headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.API_KEY}`,
@@ -268,6 +279,7 @@ export class ChatGPT {
       method: 'POST',
       headers,
       body: JSON.stringify(finBody),
+      ...fetchOptions,
     });
 
     if (!req.ok) {
@@ -286,7 +298,7 @@ export class ChatGPT {
   }
 
   /**
-   * ## .send(ReqBody | string)
+   * ## .send(ReqBody | string, [fetchOptions])
    *
    * Use this method to send request to ChatGPT API
    *
@@ -301,18 +313,19 @@ export class ChatGPT {
    * ⚠️ To use {@link ReqBody.stream stream}, use .stream() method! ⚠️
    *
    * @param {ReqBody | string} content request string or {@link ReqBody} object
+   * @param {FetchOptions} [fetchOptions={}] options to pass to fetch request
    * @returns {Promise<ResBody>} Promise with a {@link ResBody} object
    */
-  send(content: ReqBody | string): Promise<ResBody> {
+  send(content: ReqBody | string, fetchOptions: FetchOptions = {}): Promise<ResBody> {
     if (typeof content === 'object' && content.stream) {
       throw new Error('Use .steam method for stream!');
     }
 
-    return this.req(content);
+    return this.req(content, false, fetchOptions);
   }
 
   /**
-   * ## .stream(ReqBody | string)
+   * ## .stream(ReqBody | string, [fetchOptions])
    *
    * Use this method to send request to ChatGPT API and get steam response back
    *
@@ -328,9 +341,13 @@ export class ChatGPT {
    * ```
    *
    * @param {ReqBody | string} content request string or {@link ReqBody} object
+   * @param {FetchOptions} [fetchOptions={}] options to pass to fetch request
    * @returns {Promise<NodeJS.ReadableStream>} Promise with a {@link NodeJS.ReadableStream}
    */
-  stream(content: ReqBody | string): Promise<NodeJS.ReadableStream> {
-    return this.req(content, true);
+  stream(
+    content: ReqBody | string,
+    fetchOptions: FetchOptions = {},
+  ): Promise<NodeJS.ReadableStream> {
+    return this.req(content, true, fetchOptions);
   }
 }
