@@ -20,7 +20,7 @@ Official docs - https://platform.openai.com/docs/api-reference/chat
 
 ## Features
 - types included
-- docs included
+- docs are included
 - [Stream](https://platform.openai.com/docs/api-reference/chat/create#chat/create-stream) included
 
 ## Install
@@ -65,7 +65,7 @@ const chat = new ChatGPT({
 
 ### Error Handling
 
-Do not forget to catch errors from your requests since OpenAI API sometimes returns error message instead of response.
+Don't forget to catch errors from your requests since OpenAI API sometimes returns an error message instead of response.
 
 "[API error](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L266)" errors returns [APIError](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L195) type.
 
@@ -88,9 +88,14 @@ chat.send('question')
 
 ## Methods
 
-## send(content: ReqBody | string): Promise\<ResBody>
+## .send(content, [fetchOptions])
 
-Use this method to send request to ChatGPT API
+`send(content: ReqBody | string, fetchOptions: RequestInit = {}): Promise<ResBody>`
+
+- content - string or [ReqBody](#ReqBody)
+- fetchOptions - [optional] [node-fetch options](https://www.npmjs.com/package/node-fetch#options)
+
+Use this method to send a request to ChatGPT API
 
 Raw string equals to
 ``` javascript
@@ -129,9 +134,14 @@ const answer = await chat.send({
 console.log(answer.choices[0].message);
 ```
 
-## stream(content: ReqBody | string): Promise<NodeJS.ReadableStream>
+## .stream(content, [fetchOptions])
 
-Use this method to send request to ChatGPT API and get steam response back
+`stream(content: ReqBody | string, fetchOptions: RequestInit = {}): Promise<ResBody>`
+
+- content - string or [ReqBody](#ReqBody)
+- fetchOptions - [optional] [node-fetch options](https://www.npmjs.com/package/node-fetch#options)
+
+Use this method to send a request to ChatGPT API and get steam response back
 
 Raw string equals to
 ``` javascript
@@ -153,6 +163,25 @@ Examples:
   answer.pipe(process.stdout);
 })();
 ```
+
+## How to implement "stop" command
+Since you can pass options to fetch, you can abort request with AbortController. [See fetch docs](https://www.npmjs.com/package/node-fetch#request-cancellation-with-abortsignal).
+
+Example:
+``` javascript
+const controller = new AbortController();
+const doStop = () => controller.abort();
+
+// ...
+
+const answer = await chat.stream('generate some long story', {
+    signal: controller.signal,
+});
+
+answer.pipe(process.stdout);
+```
+
+Now, if you call doStop(), the controller will abort the request along with the stream.
 
 ## Types
 
@@ -179,4 +208,3 @@ Source: [index.ts#L120](https://github.com/TABmk/chatgpt-wrapper/blob/master/ind
 OpenAI API error
 
 Source: [index.ts#L195](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L195)
-

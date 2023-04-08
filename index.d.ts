@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import { RequestInit } from 'node-fetch';
 /** Message in {@link https://platform.openai.com/docs/guides/chat/introduction chat format} */
 export type Message = {
     /**
@@ -122,7 +123,7 @@ export type ResBody = {
     /**
      * ID of the used model. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
      */
-    model: 'gpt-3.5-turbo' | 'gpt-3.5-turbo-0301' | 'gpt-4' | 'gpt-4-0314' | 'gpt-4-32k' | 'gpt-4-32k-0314';
+    model: ReqBody['model'];
     /** tokens usage, see also {@link https://platform.openai.com/docs/guides/chat/managing-tokens "Managing tokens"} */
     usage: {
         /**
@@ -203,7 +204,8 @@ export declare class ChatGPT {
     API_KEY: string;
     ORG: string | undefined;
     URL: string;
-    constructor({ API_KEY, ORG, }: {
+    MODEL: ReqBody['model'];
+    constructor({ API_KEY, ORG, MODEL, }: {
         /**
          * The OpenAI API uses API keys for authentication.
          * Visit your {@link https://platform.openai.com/account/api-keys API Keys} page to retrieve the API key you'll use in your requests.
@@ -221,12 +223,20 @@ export declare class ChatGPT {
          * API endpoint. Default: `https://api.openai.com/v1/chat/completions`
          */
         URL?: string;
+        /**
+         * ID of the model to use in all requests, where it is not specified. See the {@link https://platform.openai.com/docs/models/model-endpoint-compatibility model endpoint compatibility} table for details on which models work with the Chat API.
+         *
+         * _Defaults to 'gpt-3.5-turbo'_
+         */
+        MODEL?: ReqBody['model'];
     });
     private req;
     /**
-     * ## .send(ReqBody | string)
+     * ## .send(ReqBody | string, [RequestInit])
      *
      * Use this method to send request to ChatGPT API
+     *
+     * `RequestInit` is {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}.
      *
      * Raw string equals to
      * ```
@@ -239,13 +249,16 @@ export declare class ChatGPT {
      * ⚠️ To use {@link ReqBody.stream stream}, use .stream() method! ⚠️
      *
      * @param {ReqBody | string} content request string or {@link ReqBody} object
+     * @param {RequestInit} [fetchOptions={}] {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}. See also {@link RequestInit}
      * @returns {Promise<ResBody>} Promise with a {@link ResBody} object
      */
-    send(content: ReqBody | string): Promise<ResBody>;
+    send(content: ReqBody | string, fetchOptions?: RequestInit): Promise<ResBody>;
     /**
-     * ## .stream(ReqBody | string)
+     * ## .stream(ReqBody | string, [RequestInit])
      *
      * Use this method to send request to ChatGPT API and get steam response back
+     *
+     * `RequestInit` is {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}.
      *
      * Example: `data.pipe(process.stdout)`;
      *
@@ -259,7 +272,8 @@ export declare class ChatGPT {
      * ```
      *
      * @param {ReqBody | string} content request string or {@link ReqBody} object
+     * @param {RequestInit} [fetchOptions={}] {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}. See also {@link RequestInit}
      * @returns {Promise<NodeJS.ReadableStream>} Promise with a {@link NodeJS.ReadableStream}
      */
-    stream(content: ReqBody | string): Promise<NodeJS.ReadableStream>;
+    stream(content: ReqBody | string, fetchOptions?: RequestInit): Promise<NodeJS.ReadableStream>;
 }

@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 
 /** Message in {@link https://platform.openai.com/docs/guides/chat/introduction chat format} */
 export type Message = {
@@ -204,13 +204,6 @@ export type APIError = {
   }
 };
 
-/**
- * Options to pass to fetch request.
- */
-export type FetchOptions = {
-  signal?: AbortSignal
-};
-
 export class ChatGPT {
   API_KEY: string;
 
@@ -258,7 +251,7 @@ export class ChatGPT {
   private async req(
     content: ReqBody | string,
     isStream: boolean = false,
-    fetchOptions : FetchOptions = {},
+    fetchOptions: RequestInit = {},
   ) {
     const headers = {
       'Content-Type': 'application/json',
@@ -298,9 +291,11 @@ export class ChatGPT {
   }
 
   /**
-   * ## .send(ReqBody | string, [fetchOptions])
+   * ## .send(ReqBody | string, [RequestInit])
    *
-   * Use this method to send request to ChatGPT API
+   * Use this method to send a request to ChatGPT API
+   *
+   * `RequestInit` is {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}.
    *
    * Raw string equals to
    * ```
@@ -313,10 +308,13 @@ export class ChatGPT {
    * ⚠️ To use {@link ReqBody.stream stream}, use .stream() method! ⚠️
    *
    * @param {ReqBody | string} content request string or {@link ReqBody} object
-   * @param {FetchOptions} [fetchOptions={}] options to pass to fetch request
+   * @param {RequestInit} [fetchOptions={}] {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}. See also {@link RequestInit}
    * @returns {Promise<ResBody>} Promise with a {@link ResBody} object
    */
-  send(content: ReqBody | string, fetchOptions: FetchOptions = {}): Promise<ResBody> {
+  send(
+    content: ReqBody | string,
+    fetchOptions: RequestInit = {},
+  ): Promise<ResBody> {
     if (typeof content === 'object' && content.stream) {
       throw new Error('Use .steam method for stream!');
     }
@@ -325,9 +323,11 @@ export class ChatGPT {
   }
 
   /**
-   * ## .stream(ReqBody | string, [fetchOptions])
+   * ## .stream(ReqBody | string, [RequestInit])
    *
-   * Use this method to send request to ChatGPT API and get steam response back
+   * Use this method to send a request to ChatGPT API and get steam response back
+   *
+   * `RequestInit` is {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}.
    *
    * Example: `data.pipe(process.stdout)`;
    *
@@ -341,12 +341,12 @@ export class ChatGPT {
    * ```
    *
    * @param {ReqBody | string} content request string or {@link ReqBody} object
-   * @param {FetchOptions} [fetchOptions={}] options to pass to fetch request
+   * @param {RequestInit} [fetchOptions={}] {@link https://www.npmjs.com/package/node-fetch#options node-fetch options}. See also {@link RequestInit}
    * @returns {Promise<NodeJS.ReadableStream>} Promise with a {@link NodeJS.ReadableStream}
    */
   stream(
     content: ReqBody | string,
-    fetchOptions: FetchOptions = {},
+    fetchOptions: RequestInit = {},
   ): Promise<NodeJS.ReadableStream> {
     return this.req(content, true, fetchOptions);
   }
