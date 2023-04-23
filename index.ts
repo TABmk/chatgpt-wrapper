@@ -216,6 +216,7 @@ export class ChatGPT {
   constructor({
     API_KEY,
     ORG,
+    URL,
     MODEL,
   }: {
     /**
@@ -244,7 +245,7 @@ export class ChatGPT {
   }) {
     this.API_KEY = API_KEY;
     this.ORG = ORG;
-    this.URL = 'https://api.openai.com/v1/chat/completions';
+    this.URL = URL || 'https://api.openai.com/v1/chat/completions';
     this.MODEL = MODEL || 'gpt-3.5-turbo';
   }
 
