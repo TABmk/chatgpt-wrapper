@@ -190,21 +190,26 @@ Now, if you call doStop(), the controller will abort the request along with the 
 Message in [chat format](https://platform.openai.com/docs/guides/chat/introduction)
 
 Source: [index.ts#L4](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L4)
+### FunctionModel
+
+Function model description. [See more](https://platform.openai.com/docs/guides/gpt/function-calling)
+
+Source: [index.ts#L46](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L46)
 
 ### ReqBody
 
 Request body
 
-Source: [index.ts#L21](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L21)
+Source: [index.ts#L70](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L70)
 
 ### ResBody
 
 Response body
 
-Source: [index.ts#L120](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L120)
+Source: [index.ts#L188](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L188)
 
 ### APIError
 
 OpenAI API error
 
-Source: [index.ts#L195](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L195)
+Source: [index.ts#L263](https://github.com/TABmk/chatgpt-wrapper/blob/master/index.ts#L263)
